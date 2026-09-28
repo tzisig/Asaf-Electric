@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, phoneHref } from '../config/site';
+import { keyEvents } from '../config/analytics';
+import { breadcrumbSchema, faqSchema } from '../data/schema';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ContactButtons from '../components/ContactButtons.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+
+const trail = [
+  { name: 'דף הבית', href: '/' },
+  { name: 'חירום חשמל', href: '/emergency' },
+];
+
+const steps = [
+  { icon: 'power', title: 'מורידים את המפסק הראשי', text: 'בלוח החשמל, המפסק הגדול בדרך כלל בצד או למעלה. זה מנתק את כל הדירה. אם אין גישה בטוחה ללוח, לא מתקרבים.' },
+  { icon: 'hand', title: 'לא נוגעים במקור התקלה', text: 'לא בשקע, לא במכשיר ולא בחוט. גם לא כדי "לבדוק אם זה חם".' },
+  { icon: 'flame', title: 'אש? יוצאים ומתקשרים ל-102', text: 'לא שופכים מים על אש חשמלית. אם האש קטנה ויש מטף אבקה, ורק אחרי ניתוק החשמל. אחרת יוצאים מהבית וסוגרים את הדלת.' },
+  { icon: 'phone', title: 'מתקשרים לחשמלאי', text: 'אחרי שהמצב בטוח. תגידו מה ראיתם, הריחו או שמעתם, ומה כבר ניתקתם.' },
+];
+
+const signs = [
+  { title: 'דחוף, מתקשרים עכשיו', level: 'danger', items: ['ריח שרוף או ריח של פלסטיק נמס', 'עשן או ניצוצות משקע, ממפסק או מהלוח', 'חוטים חשופים או לוח חשמל רטוב', 'שקע או תקע שנמסו או השחירו', 'מכה חשמלית ממכשיר, מברז או ממעקה'] },
+  { title: 'חשוב, באותו יום', level: 'warn', items: ['מפסק הפחת קופץ שוב ושוב', 'חשמל רק בחלק מהבית', 'אורות מהבהבים או מתעמעמים', 'זמזום מהלוח או מקופסת חיבורים'] },
+];
+
+const faqs = [
+  { q: 'אין חשמל בכל הבניין או ברחוב. למי מתקשרים?', a: 'לחברת החשמל, במוקד 103. תקלה ברשת החשמל או בחיבור לבניין היא באחריות חברת החשמל, וחשמלאי פרטי לא מטפל בה.' },
+  { q: 'מישהו קיבל מכה חשמלית. מה עושים?', a: 'לא נוגעים בו כל עוד הוא במגע עם מקור החשמל. מנתקים את המפסק הראשי, או מרחיקים את המקור בחפץ יבש שלא מוליך חשמל. מתקשרים למד"א ב-101, גם אם נראה שהוא בסדר.' },
+  { q: 'חוט חשמל נפל ברחוב. מה עושים?', a: 'מתרחקים ממנו, מרחיקים אחרים, ומתקשרים לחברת החשמל ב-103. לא מתקרבים ולא מנסים להזיז אותו.' },
+  { q: 'אפשר להרים שוב את המפסק הראשי?', a: 'לא לפני שמבינים למה הוא ירד. אם יש ריח, חום או סימני שריפה, משאירים אותו למטה עד שחשמלאי בודק.' },
+];
+---
+
+<BaseLayout
+  title={`חשמלאי חירום ${site.hours.emergencyShort} - מה עושים בתקלת חשמל מסוכנת`}
+  description={`ריח שרוף, עשן, ניצוצות או מכה חשמלית? מה עושים בדקות הראשונות, מתי מתקשרים ל-102, 101 ו-103, ומתי לחשמלאי חירום. זמינים ${site.hours.emergencyShort} בגוש דן.`}
+  schema={[breadcrumbSchema(trail), faqSchema(faqs)]}
+>
+  <section class="bg-danger text-white">
+    <div class="container-site py-10 md:py-14">
+      <div class="[&_a]:text-white"><Breadcrumbs trail={trail} onDark /></div>
+      <h1 class="mt-5 flex items-center gap-3 text-4xl md:text-5xl">
+        <Icon name="siren" size={44} />
+        חירום חשמל
+      </h1>
+      <p class="mt-4 max-w-2xl text-lg text-white/90 md:text-xl">
+        חלק מתקלות החשמל הן סכנת חיים. לפני שמתקשרים, קודם כל דואגים שאף אחד לא בסכנה.
+      </p>
+      <a href={phoneHref()} class="mt-6 inline-flex items-center gap-3 rounded-2xl bg-white px-6 py-4 text-danger-dark no-underline shadow-lift" data-track={keyEvents.phone}>
+        <Icon name="phone" size={28} />
+        <span>
+          <span class="block text-sm font-bold">חשמלאי חירום, {site.hours.emergencyShort}</span>
+          <span class="ltr block text-3xl font-black">{site.contact.phone}</span>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-site">
+      <h2 class="text-3xl md:text-4xl">מה עושים בדקות הראשונות</h2>
+      <ol class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {steps.map((s, i) => (
+          <li class="card relative p-6">
+            <span class="absolute end-5 top-5 font-mono text-4xl font-black text-line">{i + 1}</span>
+            <span class="grid size-12 place-items-center rounded-xl bg-danger-soft text-danger"><Icon name={s.icon} size={26} /></span>
+            <h3 class="mt-4 text-xl">{s.title}</h3>
+            <p class="mt-2 text-ink-soft">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+
+      <div class="mt-10 grid gap-4 rounded-2xl bg-night p-6 text-white sm:grid-cols-3">
+        {[
+          { n: '101', t: 'מד"א: מישהו נפגע' },
+          { n: '102', t: 'כבאות: אש או עשן' },
+          { n: '103', t: 'חברת החשמל: תקלה ברחוב או בכל הבניין' },
+        ].map((e) => (
+          <a href={`tel:${e.n}`} class="block rounded-xl p-2 text-white no-underline hover:bg-white/5">
+            <span class="block text-3xl font-black text-volt">{e.n}</span>{e.t}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-surface">
+    <div class="container-site grid gap-6 md:grid-cols-2">
+      {signs.map((g) => (
+        <div class:list={['rounded-2xl border-2 p-6', g.level === 'danger' ? 'border-danger/30 bg-danger-soft' : 'border-volt/60 bg-volt-soft']}>
+          <h2 class:list={['flex items-center gap-2 text-2xl', g.level === 'danger' ? 'text-danger-dark' : 'text-[#6b4e00]']}>
+            <Icon name={g.level === 'danger' ? 'triangle-alert' : 'circle-alert'} size={26} />
+            {g.title}
+          </h2>
+          <ul class="mt-4 space-y-2">
+            {g.items.map((it) => <li class="flex items-start gap-2"><Icon name="zap" size={18} class="mt-1 shrink-0" />{it}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <div class="container-site mt-10 text-center">
+      <p class="text-lg font-bold">{site.hours.emergency}. {site.hours.afterHoursNote}</p>
+      <ContactButtons class="mt-6 justify-center" whatsappText="שלום אסף, יש לי תקלת חשמל דחופה" />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-site max-w-3xl">
+      <h2 class="text-3xl">שאלות בחירום</h2>
+      <div class="mt-6"><Faq items={faqs} /></div>
+      <p class="mt-6 text-sm text-ink-soft">המידע בעמוד הוא הנחיה כללית לבטיחות ואינו מחליף הנחיות של גורמי חירום.</p>
+    </div>
+  </section>
+</BaseLayout>

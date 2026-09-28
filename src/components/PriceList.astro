@@ -1,0 +1,28 @@
+---
+import { prices, formatPrice, VAT_NOTE } from '../config/pricing';
+import { site } from '../config/site';
+
+interface Props {
+  keys: string[];
+}
+const { keys } = Astro.props;
+const items = keys.map((k) => prices[k]).filter(Boolean);
+---
+
+<div class="card overflow-hidden">
+  <ul class="divide-y divide-line">
+    {items.map((p) => (
+      <li class="flex flex-col gap-1 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        <div>
+          <p class="font-bold">{p.label}</p>
+          {p.note && <p class="text-sm text-ink-soft">{p.note}</p>}
+        </div>
+        <p class="shrink-0 text-lg font-extrabold text-blue-dark">{formatPrice(p)}</p>
+      </li>
+    ))}
+  </ul>
+  <p class="border-t border-line bg-paper px-5 py-3 text-sm text-ink-soft">
+    {VAT_NOTE}. {site.hours.afterHoursNote}
+    {site.demo && <span class="demo-tag ms-1">מחירי הדגמה</span>}
+  </p>
+</div>

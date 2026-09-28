@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { generalFaqs } from '../data/content';
+import { services } from '../data/services';
+import { breadcrumbSchema, faqSchema } from '../data/schema';
+import PageHero from '../components/PageHero.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+
+const trail = [
+  { name: 'דף הבית', href: '/' },
+  { name: 'שאלות נפוצות', href: '/faq' },
+];
+const all = generalFaqs.flatMap((g) => g.items);
+---
+
+<BaseLayout
+  title="שאלות נפוצות על עבודות חשמל"
+  description="איך בודקים שחשמלאי מוסמך, מה ההבדל בין חשמלאי לבודק חשמל, האם המחיר כולל מע״מ, ומה עושים עד שהחשמלאי מגיע. תשובות קצרות וברורות."
+  schema={[breadcrumbSchema(trail), faqSchema(all)]}
+>
+  <PageHero title="שאלות נפוצות" lead="התשובות הקצרות לשאלות שהכי הרבה אנשים שואלים לפני שמזמינים חשמלאי." label="FAQ" code="Q00" trail={trail} />
+
+  <section class="section">
+    <div class="container-site grid gap-12 lg:grid-cols-[1.6fr_1fr]">
+      <div class="space-y-12">
+        {generalFaqs.map((g) => (
+          <div>
+            <h2 class="text-2xl md:text-3xl">{g.group}</h2>
+            <div class="mt-5"><Faq items={g.items} /></div>
+          </div>
+        ))}
+      </div>
+      <aside class="lg:sticky lg:top-32 lg:self-start">
+        <div class="card p-6">
+          <h2 class="text-lg">שאלות לפי שירות</h2>
+          <p class="mt-1 text-sm text-ink-soft">בכל עמוד שירות יש שאלות ותשובות משלו.</p>
+          <ul class="mt-4 space-y-2">
+            {services.map((s) => (
+              <li><a href={`/services/${s.slug}`} class="inline-flex items-center gap-2 font-semibold"><Icon name={s.icon} size={18} />{s.name}</a></li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <CtaBand title="לא מצאתם תשובה?" text="התקשרו או שלחו וואטסאפ, ותקבלו תשובה ישירות מאסף." />
+</BaseLayout>

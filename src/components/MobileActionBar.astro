@@ -1,0 +1,17 @@
+---
+import { phoneHref, whatsappHref } from '../config/site';
+import { keyEvents } from '../config/analytics';
+import Icon from './Icon.astro';
+---
+
+<!-- Sticky call / WhatsApp bar on phones: one tap to reach Asaf from anywhere on the page. -->
+<nav aria-label="יצירת קשר מהירה" class="fixed inset-x-0 bottom-0 z-30 grid grid-cols-2 gap-2 border-t border-line bg-surface/95 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden">
+  <a href={phoneHref()} class="btn btn-call !min-h-12 !px-3" data-track={keyEvents.phone}>
+    <Icon name="phone" size={20} />
+    התקשרו
+  </a>
+  <a href={whatsappHref('שלום אסף, יש לי תקלת חשמל ואשמח לעזרה')} class="btn btn-wa !min-h-12 !px-3" data-track={keyEvents.whatsapp} target="_blank" rel="noopener">
+    <Icon name="message-circle" size={20} />
+    וואטסאפ
+  </a>
+</nav>

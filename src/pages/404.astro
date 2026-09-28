@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { services } from '../data/services';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout title="העמוד לא נמצא" description="העמוד שחיפשתם לא קיים או שעבר מקום. אפשר לחזור לדף הבית, לעמוד החירום או לאחד השירותים." noindex>
+  <section class="section">
+    <div class="container-site max-w-2xl text-center">
+      <p class="font-mono text-6xl font-black text-blue-dark" dir="ltr">404</p>
+      <h1 class="mt-4 text-4xl">נראה שיש כאן קצר</h1>
+      <p class="mt-4 text-lg text-ink-soft">העמוד שחיפשתם לא קיים, או שהוא עבר מקום.</p>
+      <ul class="mt-8 flex flex-wrap justify-center gap-3">
+        <li><a href="/" class="btn btn-primary">לדף הבית</a></li>
+        <li><a href="/emergency" class="btn btn-danger"><Icon name="siren" size={18} />חירום חשמל</a></li>
+      </ul>
+      <ul class="mt-8 flex flex-wrap justify-center gap-x-5 gap-y-2">
+        {services.map((s) => <li><a href={`/services/${s.slug}`}>{s.name}</a></li>)}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

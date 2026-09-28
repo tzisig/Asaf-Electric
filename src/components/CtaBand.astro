@@ -1,0 +1,26 @@
+---
+import { site, phoneHref } from '../config/site';
+import { keyEvents } from '../config/analytics';
+import ContactButtons from './ContactButtons.astro';
+
+interface Props {
+  title?: string;
+  text?: string;
+  whatsappText?: string;
+}
+const {
+  title = 'תקלת חשמל? מתקשרים עכשיו',
+  text = `${site.hours.emergency}. ${site.hours.afterHoursNote}`,
+  whatsappText,
+} = Astro.props;
+---
+
+<section class="on-dark grid-bg relative overflow-hidden text-white">
+  <div class="wire"></div>
+  <div class="container-site py-14 text-center md:py-20">
+    <h2 class="text-3xl md:text-5xl">{title}</h2>
+    <p class="mx-auto mt-4 max-w-2xl text-white/80">{text}</p>
+    <a href={phoneHref()} class="ltr mt-6 inline-block text-4xl font-black tracking-wide text-volt no-underline md:text-6xl" data-track={keyEvents.phone}>{site.contact.phone}</a>
+    <ContactButtons class="mt-8 justify-center" whatsappText={whatsappText} showNumber={false} />
+  </div>
+</section>

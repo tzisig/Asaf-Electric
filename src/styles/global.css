@@ -1,0 +1,283 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/heebo/wght.css';
+
+/* Design tokens - see docs/design-system.md */
+@theme {
+  --font-sans: 'Heebo Variable', system-ui, 'Segoe UI', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-night: #0b1b2e;
+  --color-night-2: #12304f;
+  --color-night-3: #1b4270;
+  --color-ink: #0f1d2e;
+  --color-ink-soft: #3d4f66;
+  --color-blue: #1a56c4;
+  --color-blue-dark: #123f94;
+  --color-volt: #ffc928;
+  --color-volt-dark: #e0a800;
+  --color-volt-soft: #fff5d1;
+  --color-danger: #b42318;
+  --color-danger-dark: #8f1b12;
+  --color-danger-soft: #fdecea;
+  --color-wa: #25d366;
+  --color-wa-dark: #1eb257;
+  --color-paper: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-line: #d8e0ea;
+  --color-success: #15803d;
+
+  --radius-btn: 12px;
+  --radius-card: 18px;
+
+  --shadow-card: 0 1px 2px #0b1b2e0f, 0 8px 24px -12px #0b1b2e2e;
+  --shadow-lift: 0 2px 4px #0b1b2e14, 0 18px 40px -18px #0b1b2e4d;
+}
+
+@layer base {
+  html {
+    color: var(--color-ink);
+    background: var(--color-paper);
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 120px;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  h1, h2, h3, h4 {
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  p, li {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: var(--color-blue);
+    text-decoration-line: underline;
+    text-underline-offset: 3px;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-blue);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  .on-dark :focus-visible {
+    outline-color: var(--color-volt);
+  }
+
+  /* Phone numbers, license numbers and prices stay left-to-right inside Hebrew text. */
+  .ltr {
+    direction: ltr;
+    unicode-bidi: isolate;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .container-site {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .container-site {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  .section {
+    padding-block: 4rem;
+  }
+
+  @media (min-width: 768px) {
+    .section {
+      padding-block: 6rem;
+    }
+  }
+
+  /* Small label above a heading, styled like a printed breaker label. */
+  .circuit-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-blue-dark);
+  }
+
+  .circuit-label::before {
+    content: attr(data-code);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0.125rem 0.4rem;
+    border: 1.5px solid currentColor;
+    border-radius: 4px;
+    direction: ltr;
+  }
+
+  .on-dark .circuit-label {
+    color: var(--color-volt);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 52px;
+    padding: 0.75rem 1.4rem;
+    border-radius: var(--radius-btn);
+    font-weight: 800;
+    font-size: 1.0625rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 150ms ease-out, box-shadow 150ms ease-out, background-color 150ms ease-out;
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  .btn-call {
+    background: var(--color-volt);
+    color: var(--color-night);
+    box-shadow: 0 6px 18px -8px #ffc928aa;
+  }
+
+  .btn-call:hover {
+    background: var(--color-volt-dark);
+  }
+
+  .btn-wa {
+    background: var(--color-wa);
+    color: var(--color-night);
+  }
+
+  .btn-wa:hover {
+    background: var(--color-wa-dark);
+  }
+
+  .btn-primary {
+    background: var(--color-blue);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: var(--color-blue-dark);
+  }
+
+  .btn-outline {
+    border: 2px solid currentColor;
+    color: var(--color-ink);
+    background: transparent;
+  }
+
+  .on-dark .btn-outline {
+    color: #fff;
+  }
+
+  .btn-danger {
+    background: var(--color-danger);
+    color: #fff;
+  }
+
+  .btn-danger:hover {
+    background: var(--color-danger-dark);
+  }
+
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Faint engineering grid for dark sections. */
+  .grid-bg {
+    background-color: var(--color-night);
+    background-image:
+      linear-gradient(#ffffff0a 1px, transparent 1px),
+      linear-gradient(90deg, #ffffff0a 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* The "live wire": a thin yellow line with a traveling pulse. */
+  .wire {
+    position: relative;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ffc92899 12%, #ffc92899 88%, transparent);
+    overflow: hidden;
+  }
+
+  .wire::after {
+    content: '';
+    position: absolute;
+    inset-block: -1px;
+    width: 18%;
+    background: linear-gradient(90deg, transparent, #fff6cc, transparent);
+    animation: wire-pulse 3.2s ease-in-out infinite;
+  }
+
+  @keyframes wire-pulse {
+    from { inset-inline-start: -20%; }
+    to { inset-inline-start: 110%; }
+  }
+
+  .prose-site p + p {
+    margin-top: 1rem;
+  }
+
+  .demo-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: var(--color-volt-soft);
+    color: #6b4e00;
+    border: 1px solid #f0d27a;
+  }
+
+  /* One-time reveal on scroll. Content stays visible without JS or with reduced motion. */
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 400ms ease-out, transform 400ms ease-out;
+  }
+
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, phoneHref, whatsappHref } from '../config/site';
+import { keyEvents } from '../config/analytics';
+import { breadcrumbSchema } from '../data/schema';
+import PageHero from '../components/PageHero.astro';
+import LeadForm from '../components/LeadForm.astro';
+import Icon from '../components/Icon.astro';
+
+const trail = [
+  { name: 'דף הבית', href: '/' },
+  { name: 'צור קשר', href: '/contact' },
+];
+---
+
+<BaseLayout
+  title="צור קשר - טלפון, וואטסאפ וטופס"
+  description={`יצירת קשר עם ${site.ownerName}, ${site.license.grade}: טלפון ${site.contact.phone}, וואטסאפ או טופס קצר. ${site.hours.emergency}.`}
+  schema={[breadcrumbSchema(trail)]}
+>
+  <PageHero title="צור קשר" lead="הדרך הכי מהירה היא טלפון. וואטסאפ מצוין אם רוצים לשלוח תמונה של הלוח או של התקלה." label="יצירת קשר" code="C00" trail={trail} />
+
+  <section class="section">
+    <div class="container-site grid gap-10 lg:grid-cols-[1fr_1.4fr]">
+      <div class="space-y-4">
+        <a href={phoneHref()} class="card flex items-center gap-4 p-5 text-ink no-underline hover:border-blue" data-track={keyEvents.phone}>
+          <span class="grid size-12 place-items-center rounded-xl bg-volt text-night"><Icon name="phone" size={24} /></span>
+          <span>
+            <span class="block text-sm text-ink-soft">טלפון</span>
+            <span class="ltr block text-2xl font-black">{site.contact.phone}</span>
+          </span>
+        </a>
+        <a href={whatsappHref('שלום אסף, אשמח לעזרה')} class="card flex items-center gap-4 p-5 text-ink no-underline hover:border-blue" data-track={keyEvents.whatsapp} target="_blank" rel="noopener">
+          <span class="grid size-12 place-items-center rounded-xl bg-wa text-night"><Icon name="message-circle" size={24} /></span>
+          <span>
+            <span class="block text-sm text-ink-soft">וואטסאפ</span>
+            <span class="block text-xl font-extrabold">שלחו הודעה או תמונה</span>
+          </span>
+        </a>
+        <a href={`mailto:${site.contact.email}`} class="card flex items-center gap-4 p-5 text-ink no-underline hover:border-blue">
+          <span class="grid size-12 place-items-center rounded-xl bg-paper text-blue"><Icon name="mail" size={24} /></span>
+          <span>
+            <span class="block text-sm text-ink-soft">מייל</span>
+            <span class="ltr block font-bold">{site.contact.email}</span>
+          </span>
+        </a>
+        <div class="card p-5">
+          <h2 class="flex items-center gap-2 text-lg"><Icon name="clock" size={20} class="text-blue" />שעות פעילות</h2>
+          <ul class="mt-3 space-y-1.5">
+            {site.hours.regular.map((h) => <li>{h.days}: <span class="ltr">{h.time}</span></li>)}
+            <li class="font-bold text-danger">{site.hours.emergency}</li>
+          </ul>
+          <p class="mt-3 text-sm text-ink-soft">{site.hours.afterHoursNote}</p>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="mb-4 text-2xl">או השאירו פרטים</h2>
+        <LeadForm />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

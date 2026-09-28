@@ -1,0 +1,35 @@
+---
+import { images, srcFor, type ImageKey } from '../data/images';
+
+/**
+ * Responsive WebP from the image registry. Reserves its box through
+ * width/height so nothing shifts while it loads (CLS).
+ */
+interface Props {
+  image: ImageKey;
+  /** CSS sizes attribute. */
+  sizes: string;
+  class?: string;
+  /** Above-the-fold images load eagerly with high priority. */
+  priority?: boolean;
+  alt?: string;
+}
+
+const { image, sizes, class: className, priority = false, alt } = Astro.props;
+const img = images[image];
+const largest = Math.max(...img.widths);
+const srcset = img.widths.map((w) => `${srcFor(img, w)} ${w}w`).join(', ');
+---
+
+<img
+  src={srcFor(img, largest)}
+  srcset={srcset}
+  sizes={sizes}
+  width={largest}
+  height={Math.round(largest / img.ratio)}
+  alt={alt ?? img.alt}
+  class={className}
+  loading={priority ? 'eager' : 'lazy'}
+  decoding={priority ? 'sync' : 'async'}
+  fetchpriority={priority ? 'high' : 'auto'}
+/>

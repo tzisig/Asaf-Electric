@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { services } from '../../data/services';
+import { breadcrumbSchema } from '../../data/schema';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import PriceList from '../../components/PriceList.astro';
+import ContactButtons from '../../components/ContactButtons.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { prices } from '../../config/pricing';
+
+const trail = [
+  { name: 'דף הבית', href: '/' },
+  { name: 'שירותים', href: '/services' },
+];
+---
+
+<BaseLayout
+  title="שירותי חשמלאי לבית, לדירה ולמשרד"
+  description="כל שירותי החשמלאי במקום אחד: תיקון תקלות, החלפת לוחות חשמל, התקנת תאורה, עמדות טעינה לרכב חשמלי ובדיקות חשמל. מחירים כולל מע״מ."
+  schema={[breadcrumbSchema(trail)]}
+>
+  <PageHero
+    title="שירותי חשמלאי לבית ולמשרד"
+    lead="חשמלאי מוסמך רשאי לבצע ולתכנן את כל עבודות החשמל עד חיבור של 3X80 אמפר. זה מכסה כמעט כל דירה, בית פרטי ומשרד קטן."
+    label="השירותים"
+    code="F00"
+    trail={trail}
+  >
+    <ContactButtons />
+  </PageHero>
+
+  <section class="section">
+    <h2 class="sr-only">רשימת השירותים</h2>
+    <div class="container-site grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {services.map((s, i) => <ServiceCard service={s} index={i} />)}
+    </div>
+  </section>
+
+  <section class="section bg-surface">
+    <div class="container-site max-w-3xl">
+      <h2 class="text-3xl">מחירון בסיסי</h2>
+      <p class="mt-3 text-lg text-ink-soft">מחיר "החל מ" הוא נקודת פתיחה. המחיר הסופי נקבע אחרי אבחון, ואתם שומעים אותו לפני שמתחילים לעבוד.</p>
+      <div class="mt-8"><PriceList keys={Object.keys(prices)} /></div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

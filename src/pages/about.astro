@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, yearsOfExperience } from '../config/site';
+import { areas } from '../data/areas';
+import { breadcrumbSchema } from '../data/schema';
+import PageHero from '../components/PageHero.astro';
+import LicenseCard from '../components/LicenseCard.astro';
+import Picture from '../components/Picture.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+
+const trail = [
+  { name: 'דף הבית', href: '/' },
+  { name: 'אודות', href: '/about' },
+];
+
+const principles = [
+  { icon: 'badge-check', title: 'רישיון על השולחן', text: 'מספר הרישיון והדרגה מופיעים בכל עמוד. מי שעובד עם חשמל בבית שלכם צריך להיות מוכן שיבדקו אותו.' },
+  { icon: 'file-text', title: 'מחיר לפני עבודה', text: 'אבחון, הסבר, מחיר, ורק אז עבודה. בלי "נראה תוך כדי".' },
+  { icon: 'shield-check', title: 'בטיחות לפני מהירות', text: 'כשמשהו לא בטוח, אומרים את זה, גם אם זה אומר עבודה גדולה יותר או לא לעשות את העבודה בכלל.' },
+  { icon: 'wrench', title: 'עבודה שנשארת מסודרת', text: 'לוח מסומן, כבלים בתעלות, ומישהו אחר שיפתח את הלוח בעוד עשר שנים יבין מה קורה בו.' },
+];
+---
+
+<BaseLayout
+  title={`אודות ${site.ownerName} - ${site.license.grade} ובודק חשמל`}
+  description={`${site.ownerName}, ${site.license.grade} ו${site.license.inspectorGrade}, ${yearsOfExperience()} שנות ניסיון בעבודות חשמל בגוש דן. רישיון מס' ${site.license.number}.`}
+  schema={[breadcrumbSchema(trail)]}
+>
+  <PageHero
+    title={`נעים מאוד, ${site.ownerName}`}
+    lead={`${site.license.grade} ו${site.license.inspectorGrade}, ${yearsOfExperience()} שנים בתחום. עובד לבד, מגיע בעצמו, ועונה לטלפון בעצמו.`}
+    label="אודות"
+    code="F00"
+    trail={trail}
+  >
+    <Fragment slot="aside"><LicenseCard /></Fragment>
+  </PageHero>
+
+  <section class="section">
+    <div class="container-site grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-start">
+      <figure>
+        <Picture image="panelCloseup" sizes="(min-width: 1024px) 480px, 100vw" class="aspect-[4/5] w-full rounded-3xl object-cover shadow-lift" />
+        {site.demo && <figcaption class="mt-3 text-sm text-ink-soft">תמונה להמחשה. באתר של לקוח אמיתי כאן תופיע תמונה של בעל העסק.</figcaption>}
+      </figure>
+      <div class="prose-site text-lg">
+        <h2 class="mb-4 text-3xl">איך זה התחיל</h2>
+        <p>
+          אסףנכנס לתחום אחרי שירות צבאי ביחידה טכנית, כשהבין שהוא נהנה מעבודה שבסופה משהו פשוט עובד. הוא התחיל כשוליה אצל חשמלאי ותיק ב{site.baseCity}, למד את המקצוע מהלוח ועד הקיר, ועבר את מבחני הרישוי של משרד העבודה עד דרגת {site.license.grade}.
+        </p>
+        <p>
+          בשנת {site.workingSince} פתח עסק עצמאי. מאז הוא עובד בעיקר בדירות ובבתים פרטיים בגוש דן, ובשנים האחרונות גם בהתקנות של עמדות טעינה לרכב חשמלי, תחום שגדל מהר.
+        </p>
+        <p>
+          כדי שיוכל לתת ללקוחות תמונה מלאה של מצב החשמל בבית, אסףהוסיף רישיון {site.license.inspectorGrade}. לפי התקנות, בודק לא בודק עבודה שהוא עצמו ביצע, ולכן כשצריך אישור לעבודה שלו, הוא מתאם בודק אחר. זה אולי מסבך קצת, אבל זה בדיוק מה שהופך את הבדיקה לשווה משהו.
+        </p>
+        {site.demo && <p class="demo-tag">סיפור רקע בדוי לצורך הדגמה</p>}
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-surface">
+    <div class="container-site">
+      <h2 class="text-3xl md:text-4xl">איך אסףעובד</h2>
+      <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {principles.map((p) => (
+          <li class="card reveal p-6">
+            <span class="grid size-12 place-items-center rounded-xl bg-volt-soft text-night"><Icon name={p.icon} size={24} /></span>
+            <h3 class="mt-4 text-xl">{p.title}</h3>
+            <p class="mt-2 text-ink-soft">{p.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-site grid gap-8 md:grid-cols-3">
+      <div class="card p-6">
+        <p class="text-4xl font-black text-blue-dark">{yearsOfExperience()}</p>
+        <p class="mt-1 font-bold">שנות ניסיון</p>
+      </div>
+      <div class="card p-6">
+        <p class="text-4xl font-black text-blue-dark">{areas.length}</p>
+        <p class="mt-1 font-bold">ערים באזור השירות</p>
+        <p class="mt-2 text-sm text-ink-soft">{areas.map((a) => a.city).join(', ')}</p>
+      </div>
+      <div class="card p-6">
+        <p class="ltr text-4xl font-black text-blue-dark">{site.hours.emergencyShort}</p>
+        <p class="mt-1 font-bold">לתקלות דחופות</p>
+        <p class="mt-2 text-sm text-ink-soft">{site.warranty}</p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="רוצים לדבר עם אסף?" text="טלפון או וואטסאפ, מה שנוח לכם. לתקלה דחופה עדיף טלפון." />
+</BaseLayout>

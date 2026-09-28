@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../config/site';
+import { gallery } from '../data/content';
+import { serviceBySlug } from '../data/services';
+import { breadcrumbSchema } from '../data/schema';
+import PageHero from '../components/PageHero.astro';
+import Picture from '../components/Picture.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const trail = [
+  { name: 'דף הבית', href: '/' },
+  { name: 'עבודות', href: '/gallery' },
+];
+---
+
+<BaseLayout
+  title="גלריית עבודות חשמל - לוחות, תאורה ועמדות טעינה"
+  description="לוחות חשמל מסודרים, תאורת לד, עמדות טעינה לרכב חשמלי ובדיקות חשמל. כך נראית עבודת חשמל שנעשתה כמו שצריך."
+  schema={[breadcrumbSchema(trail)]}
+>
+  <PageHero
+    title="עבודות"
+    lead="לוח חשמל טוב נראה משעמם: הכל מסומן, הכל ישר, ואין הפתעות. ככה נראית עבודה שנעשתה כמו שצריך."
+    label="גלריה"
+    code="G00"
+    trail={trail}
+  />
+
+  <section class="section">
+    <div class="container-site">
+      {site.demo && (
+        <p class="mb-8 rounded-xl bg-volt-soft px-4 py-3 text-sm text-[#5c4300]">
+          אתר הדגמה: התמונות הן תמונות ברישיון חופשי שממחישות את סוגי העבודות, ואינן עבודות של העסק.
+        </p>
+      )}
+      <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {gallery.map((g) => {
+          const service = serviceBySlug(g.service);
+          return (
+            <li class="card reveal overflow-hidden">
+              <Picture image={g.image} sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw" class="aspect-[4/3] w-full object-cover" />
+              <div class="p-5">
+                <h2 class="text-xl">{g.title}</h2>
+                <p class="mt-1.5 text-ink-soft">{g.text}</p>
+                {service && <a href={`/services/${service.slug}`} class="mt-3 inline-block text-sm font-bold">{service.name}</a>}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand title="רוצים שגם הלוח שלכם ייראה ככה?" />
+</BaseLayout>

@@ -1,0 +1,24 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  trail: { name: string; href: string }[];
+  onDark?: boolean;
+}
+const { trail, onDark = false } = Astro.props;
+---
+
+<nav aria-label="פירורי לחם" class="text-sm">
+  <ol class="flex flex-wrap items-center gap-1.5">
+    {trail.map((t, i) => (
+      <li class="flex items-center gap-1.5">
+        {i > 0 && <Icon name="chevron-left" size={14} class={onDark ? 'text-white/40' : 'text-ink-soft/60'} />}
+        {i === trail.length - 1 ? (
+          <span aria-current="page" class={onDark ? 'text-white' : 'text-ink-soft'}>{t.name}</span>
+        ) : (
+          <a href={t.href} class={onDark ? 'text-white/85 hover:text-volt' : ''}>{t.name}</a>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>

@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../config/site';
+import { testimonials } from '../data/content';
+import { breadcrumbSchema } from '../data/schema';
+import PageHero from '../components/PageHero.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+
+const trail = [
+  { name: 'דף הבית', href: '/' },
+  { name: 'המלצות', href: '/reviews' },
+];
+---
+
+<BaseLayout
+  title="המלצות לקוחות"
+  description={`מה אומרים לקוחות על ${site.ownerName}, ${site.license.grade} בגוש דן: תיקון תקלות, החלפת לוחות, עמדות טעינה ובדיקות חשמל.`}
+  schema={[breadcrumbSchema(trail)]}
+>
+  <PageHero
+    title="המלצות לקוחות"
+    lead="ציטוט מלא, שם ועיר. בלי כוכבים שאי אפשר לבדוק."
+    label="המלצות"
+    code="R00"
+    trail={trail}
+  />
+
+  <section class="section">
+    <div class="container-site">
+      {site.demo && (
+        <p class="mb-8 rounded-xl bg-volt-soft px-4 py-3 text-sm text-[#5c4300]">
+          אתר הדגמה: ההמלצות בעמוד הן דוגמאות שנכתבו להמחשה ומסומנות ככאלה. באתר אמיתי יופיעו רק המלצות אמיתיות, באישור הלקוחות.
+        </p>
+      )}
+      <div class="grid gap-6 md:grid-cols-2">
+        {testimonials.map((t) => <TestimonialCard item={t} />)}
+      </div>
+
+      <div class="mt-12 flex flex-col items-start gap-4 rounded-2xl border border-line bg-surface p-6 sm:flex-row sm:items-center sm:justify-between">
+        <p class="flex items-center gap-3 text-lg font-bold">
+          <Icon name="star" size={24} class="text-volt-dark" />
+          עבדתם עם אסף? נשמח לשמוע איך היה.
+        </p>
+        {site.googleBusinessUrl ? (
+          <a href={site.googleBusinessUrl} class="btn btn-primary" target="_blank" rel="noopener">כתבו ביקורת בגוגל</a>
+        ) : (
+          <a href="/contact" class="btn btn-primary">שלחו לנו המלצה</a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

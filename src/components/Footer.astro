@@ -1,0 +1,87 @@
+---
+import { site, phoneHref, whatsappHref, yearsOfExperience } from '../config/site';
+import { services } from '../data/services';
+import { areas } from '../data/areas';
+import { legalNav } from '../data/navigation';
+import { keyEvents } from '../config/analytics';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="on-dark grid-bg mt-auto pb-24 text-white/85 md:pb-0">
+  <div class="wire"></div>
+  <div class="container-site grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <Logo onDark />
+      <p class="mt-4 text-sm leading-relaxed">{site.tagline}</p>
+      <dl class="mt-5 space-y-1.5 text-sm">
+        <div class="flex gap-2">
+          <dt class="text-white/60">רישיון:</dt>
+          <dd>{site.license.grade}, מס' <span class="ltr font-bold text-volt">{site.license.number}</span></dd>
+        </div>
+        {site.license.inspectorGrade && (
+          <div class="flex gap-2">
+            <dt class="text-white/60">בודק:</dt>
+            <dd>{site.license.inspectorGrade}, מס' <span class="ltr font-bold text-volt">{site.license.inspectorNumber}</span></dd>
+          </div>
+        )}
+        <div class="flex gap-2">
+          <dt class="text-white/60">ניסיון:</dt>
+          <dd>{yearsOfExperience()} שנים</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div>
+      <h2 class="text-base font-bold text-white">שירותים</h2>
+      <ul class="mt-4 space-y-2 text-sm">
+        {services.map((s) => <li><a href={`/services/${s.slug}`} class="text-white/85 no-underline hover:text-volt">{s.name}</a></li>)}
+        <li><a href="/emergency" class="text-white/85 no-underline hover:text-volt">חירום חשמל</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-base font-bold text-white">אזורי שירות</h2>
+      <ul class="mt-4 space-y-2 text-sm">
+        {areas.map((a) => <li><a href={`/areas/${a.slug}`} class="text-white/85 no-underline hover:text-volt">חשמלאי {a.inCity}</a></li>)}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-base font-bold text-white">יצירת קשר</h2>
+      <ul class="mt-4 space-y-3 text-sm">
+        <li>
+          <a href={phoneHref()} class="inline-flex items-center gap-2 text-white no-underline hover:text-volt" data-track={keyEvents.phone}>
+            <Icon name="phone" size={18} class="text-volt" /><span class="ltr font-bold">{site.contact.phone}</span>
+          </a>
+        </li>
+        <li>
+          <a href={whatsappHref()} class="inline-flex items-center gap-2 text-white no-underline hover:text-volt" data-track={keyEvents.whatsapp} target="_blank" rel="noopener">
+            <Icon name="message-circle" size={18} class="text-volt" />וואטסאפ
+          </a>
+        </li>
+        <li>
+          <a href={`mailto:${site.contact.email}`} class="inline-flex items-center gap-2 text-white no-underline hover:text-volt">
+            <Icon name="mail" size={18} class="text-volt" /><span class="ltr">{site.contact.email}</span>
+          </a>
+        </li>
+      </ul>
+      <h3 class="mt-6 text-sm font-bold text-white">שעות פעילות</h3>
+      <ul class="mt-2 space-y-1 text-sm">
+        {site.hours.regular.map((h) => <li>{h.days}: <span class="ltr">{h.time}</span></li>)}
+        <li class="font-semibold text-volt">{site.hours.emergency}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="container-site flex flex-col gap-3 py-5 text-xs text-white/60 md:flex-row md:items-center md:justify-between">
+      <p>© {year} {site.ownerName}. עוסק מורשה <span class="ltr">{site.businessId}</span>.</p>
+      <ul class="flex flex-wrap gap-x-5 gap-y-2">
+        {legalNav.map((l) => <li><a href={l.href} class="text-white/70 hover:text-white">{l.label}</a></li>)}
+      </ul>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,21 @@
+---
+import { site } from '../config/site';
+
+/** Emblem (bolt in a breaker-shaped tile) + wordmark in live text. */
+interface Props {
+  onDark?: boolean;
+}
+const { onDark = false } = Astro.props;
+---
+
+<span class="inline-flex items-center gap-2.5">
+  <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false" class="shrink-0">
+    <rect x="1" y="1" width="38" height="38" rx="10" fill={onDark ? '#ffc928' : '#0b1b2e'} />
+    <rect x="6" y="6" width="28" height="28" rx="6" fill="none" stroke={onDark ? '#0b1b2e' : '#ffc928'} stroke-opacity="0.35" stroke-width="1.5" />
+    <path d="M22.5 7 12 22h7l-2 11 11-16h-7.2z" fill={onDark ? '#0b1b2e' : '#ffc928'} />
+  </svg>
+  <span class="flex flex-col leading-none">
+    <span class:list={['text-lg font-extrabold tracking-tight', onDark ? 'text-white' : 'text-ink']}>{site.ownerName}</span>
+    <span class:list={['mt-1 text-[0.8125rem] font-semibold', onDark ? 'text-volt' : 'text-blue-dark']}>{site.license.grade}</span>
+  </span>
+</span>

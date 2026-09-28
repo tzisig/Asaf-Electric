@@ -1,0 +1,30 @@
+---
+import Breadcrumbs from './Breadcrumbs.astro';
+
+/** Dark hero for inner pages. The default slot goes under the lead text (CTAs, facts). */
+interface Props {
+  title: string;
+  lead?: string;
+  label?: string;
+  code?: string;
+  trail: { name: string; href: string }[];
+}
+const { title, lead, label, code = 'F00', trail } = Astro.props;
+const hasAside = Astro.slots.has('aside');
+---
+
+<section class="on-dark grid-bg relative overflow-hidden text-white">
+  <div class="container-site relative py-10 md:py-16">
+    <Breadcrumbs trail={trail} onDark />
+    <div class:list={['mt-6 grid gap-10 lg:items-center', hasAside && 'lg:grid-cols-[1.2fr_1fr]']}>
+      <div>
+        {label && <p class="circuit-label" data-code={code}>{label}</p>}
+        <h1 class="mt-3 text-4xl md:text-5xl">{title}</h1>
+        {lead && <p class="mt-5 max-w-2xl text-lg text-white/80">{lead}</p>}
+        <div class="mt-7"><slot /></div>
+      </div>
+      {hasAside && <div><slot name="aside" /></div>}
+    </div>
+  </div>
+  <div class="wire"></div>
+</section>

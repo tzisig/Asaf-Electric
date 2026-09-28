@@ -1,0 +1,25 @@
+---
+import { site, phoneHref, whatsappHref } from '../config/site';
+import { keyEvents } from '../config/analytics';
+import Icon from './Icon.astro';
+
+/** The two primary CTAs, side by side. Used in heroes and CTA bands. */
+interface Props {
+  whatsappText?: string;
+  class?: string;
+  /** Show the number on the call button. */
+  showNumber?: boolean;
+}
+const { whatsappText = 'שלום אסף, אשמח לעזרה בעבודת חשמל', class: className, showNumber = true } = Astro.props;
+---
+
+<div class:list={['flex flex-col gap-3 sm:flex-row', className]}>
+  <a href={phoneHref()} class="btn btn-call" data-track={keyEvents.phone}>
+    <Icon name="phone" size={20} />
+    {showNumber ? <span>התקשרו: <span class="ltr">{site.contact.phone}</span></span> : 'התקשרו עכשיו'}
+  </a>
+  <a href={whatsappHref(whatsappText)} class="btn btn-wa" data-track={keyEvents.whatsapp} target="_blank" rel="noopener">
+    <Icon name="message-circle" size={20} />
+    שלחו וואטסאפ
+  </a>
+</div>

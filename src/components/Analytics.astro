@@ -1,0 +1,126 @@
+---
+import { analytics } from '../config/analytics';
+
+/**
+ * Consent Mode v2: everything starts denied. Tags load only after the visitor
+ * accepts, and click events are tracked through data-track attributes.
+ */
+const { ga4Id, metaPixelId } = analytics;
+const hasTags = Boolean(ga4Id || metaPixelId);
+---
+
+<script is:inline define:vars={{ ga4Id, metaPixelId, hasTags }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    window.dataLayer.push(arguments);
+  }
+  window.gtag = gtag;
+
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied',
+    functionality_storage: 'granted',
+    security_storage: 'granted',
+    wait_for_update: 500,
+  });
+
+  const readConsent = () => {
+    try {
+      return JSON.parse(localStorage.getItem('ab-consent') || 'null');
+    } catch {
+      return null;
+    }
+  };
+
+  let tagsLoaded = false;
+
+  const loadScript = (src) => {
+    const el = document.createElement('script');
+    el.async = true;
+    el.src = src;
+    document.head.appendChild(el);
+  };
+
+  const loadTags = (consent) => {
+    if (tagsLoaded || !hasTags) return;
+    tagsLoaded = true;
+
+    if (ga4Id && consent.analytics) {
+      loadScript(`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`);
+      gtag('js', new Date());
+      gtag('config', ga4Id, { anonymize_ip: true });
+    }
+
+    if (metaPixelId && consent.marketing) {
+      /* eslint-disable */
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = '2.0';
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+      window.fbq('init', metaPixelId);
+      window.fbq('track', 'PageView');
+    }
+
+  };
+
+  const applyConsent = (consent) => {
+    if (!consent) return;
+    gtag('consent', 'update', {
+      analytics_storage: consent.analytics ? 'granted' : 'denied',
+      ad_storage: consent.marketing ? 'granted' : 'denied',
+      ad_user_data: consent.marketing ? 'granted' : 'denied',
+      ad_personalization: consent.marketing ? 'granted' : 'denied',
+    });
+    if (consent.analytics || consent.marketing) loadTags(consent);
+  };
+
+  applyConsent(readConsent());
+  window.addEventListener('ab:consent', (e) => applyConsent(e.detail));
+
+  // Outbound click tracking. Works with or without tags loaded.
+  document.addEventListener('click', (e) => {
+    const target = e.target instanceof Element ? e.target.closest('[data-track]') : null;
+    if (!target) return;
+    const name = target.getAttribute('data-track');
+    window.dataLayer.push({ event: name });
+    if (typeof window.gtag === 'function') window.gtag('event', name);
+  });
+
+  /**
+   * First-touch attribution. Captured on every page so a visitor who lands on a
+   * campaign URL and submits somewhere else still arrives with a source, and
+   * written once so the first touch is not overwritten by later internal pages.
+   * sessionStorage only, so it disappears with the tab and carries no identifier.
+   */
+  try {
+    if (!sessionStorage.getItem('ab:attribution')) {
+      const q = new URLSearchParams(location.search);
+      const utm = {};
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid'].forEach((k) => {
+        const v = q.get(k);
+        if (v) utm[k] = v.slice(0, 120);
+      });
+      const ref = document.referrer && !document.referrer.startsWith(location.origin) ? document.referrer : '';
+      sessionStorage.setItem(
+        'ab:attribution',
+        JSON.stringify({ ...utm, referrer: ref.slice(0, 200), landing_page: location.pathname }),
+      );
+    }
+  } catch (e) {
+    // Private mode or blocked storage: the lead still sends, just without a source.
+  }
+</script>

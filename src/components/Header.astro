@@ -1,0 +1,124 @@
+---
+import { site, phoneHref } from '../config/site';
+import { mainNav } from '../data/navigation';
+import { services } from '../data/services';
+import { keyEvents } from '../config/analytics';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+
+const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
+---
+
+<header class="sticky top-0 z-40">
+  <!-- Permanent emergency strip: visible on every page while scrolling. -->
+  <div class="bg-danger text-white">
+    <div class="container-site flex min-h-10 items-center justify-between gap-3 py-1.5 text-sm">
+      <p class="flex items-center gap-2 font-semibold">
+        <Icon name="siren" size={18} />
+        <span><span class="hidden sm:inline">תקלת חשמל דחופה? </span>זמינים {site.hours.emergencyShort}</span>
+      </p>
+      <div class="flex items-center gap-4">
+        <a href="/emergency" class="hidden text-white underline decoration-white/50 sm:inline">מה עושים עכשיו</a>
+        <a href={phoneHref()} class="ltr font-extrabold text-white no-underline" data-track={keyEvents.phone}>{site.contact.phone}</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-b border-line bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/85">
+    <div class="container-site flex h-[68px] items-center justify-between gap-4">
+      <a href="/" class="no-underline" aria-label={`${site.ownerName} ${site.license.grade}, דף הבית`}>
+        <Logo />
+      </a>
+
+      <nav aria-label="ניווט ראשי" class="hidden lg:block">
+        <ul class="flex items-center gap-1">
+          {mainNav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class:list={[
+                  'rounded-lg px-3 py-2 font-semibold no-underline transition-colors hover:bg-paper',
+                  isActive(item.href) ? 'text-blue' : 'text-ink',
+                ]}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <a href={phoneHref()} class="btn btn-call !hidden !min-h-11 !px-4 md:!inline-flex" data-track={keyEvents.phone}>
+          <Icon name="phone" size={18} />
+          <span class="ltr">{site.contact.phone}</span>
+        </a>
+        <button
+          type="button"
+          class="inline-flex size-11 items-center justify-center rounded-lg border border-line text-ink lg:hidden"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          data-menu-toggle
+        >
+          <span class="sr-only">תפריט</span>
+          <span data-icon-open><Icon name="menu" /></span>
+          <span data-icon-close hidden><Icon name="x" /></span>
+        </button>
+      </div>
+    </div>
+
+    <nav id="mobile-menu" aria-label="ניווט ראשי" class="max-h-[calc(100dvh-110px)] overflow-y-auto border-t border-line bg-surface lg:hidden" hidden>
+      <ul class="container-site py-3">
+        {mainNav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="flex min-h-12 items-center justify-between border-b border-line/70 font-semibold text-ink no-underline"
+              aria-current={isActive(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+              <Icon name="chevron-left" size={18} class="text-ink-soft" />
+            </a>
+            {item.href === '/services' && (
+              <ul class="pb-2 ps-4">
+                {services.map((s) => (
+                  <li>
+                    <a href={`/services/${s.slug}`} class="flex min-h-11 items-center text-ink-soft no-underline">{s.name}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+        <li class="pt-3">
+          <a href="/emergency" class="btn btn-danger w-full">
+            <Icon name="siren" size={20} />
+            חירום חשמל: מה עושים עכשיו
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.getElementById('mobile-menu');
+  if (toggle && menu) {
+    const set = (open: boolean) => {
+      menu.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.querySelector<HTMLElement>('[data-icon-open]')!.hidden = open;
+      toggle.querySelector<HTMLElement>('[data-icon-close]')!.hidden = !open;
+    };
+    toggle.addEventListener('click', () => set(menu.hasAttribute('hidden')));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hidden) {
+        set(false);
+        toggle.focus();
+      }
+    });
+  }
+</script>

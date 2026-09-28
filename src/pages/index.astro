@@ -1,0 +1,247 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, yearsOfExperience } from '../config/site';
+import { services } from '../data/services';
+import { areas } from '../data/areas';
+import { testimonials, gallery, generalFaqs } from '../data/content';
+import { faqSchema } from '../data/schema';
+import ContactButtons from '../components/ContactButtons.astro';
+import LicenseCard from '../components/LicenseCard.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import Picture from '../components/Picture.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+
+const homeFaqs = [...generalFaqs[0].items.slice(0, 2), ...generalFaqs[1].items.slice(0, 2)];
+
+const trust = [
+  { icon: 'badge-check', title: site.license.grade, text: `רישיון מס' ${site.license.number}` },
+  { icon: 'shield-check', title: site.license.inspectorGrade ?? 'בדיקות בטיחות', text: 'בדיקות חשמל עם דוח בכתב' },
+  { icon: 'clock', title: `זמינות ${site.hours.emergencyShort}`, text: 'לתקלות דחופות, כל ימות השבוע' },
+  { icon: 'hammer', title: `${yearsOfExperience()} שנות ניסיון`, text: site.warranty },
+];
+
+const why = [
+  { title: 'רישיון גלוי, לא הבטחה', text: `מספר הרישיון מופיע בכל עמוד באתר, ואפשר לבדוק אותו במשרד העבודה. חשמל זה לא תחום לניחושים.` },
+  { title: 'מחיר לפני שנוגעים במשהו', text: 'אחרי האבחון אתם שומעים מה צריך ובכמה. אם מתגלה משהו חדש באמצע, עוצרים ומדברים קודם.' },
+  { title: 'מסבירים, לא רק מתקנים', text: 'בסוף כל עבודה אתם יודעים מה היה, מה תוקן, ומה כדאי לבדוק בעתיד.' },
+  { title: 'עבודה נקייה ומסודרת', text: 'לוח מסומן, כבלים בתעלות, ואיסוף הפסולת לפני שיוצאים. הבית נשאר כמו שהיה.' },
+];
+
+const steps = [
+  { title: 'מתקשרים או שולחים וואטסאפ', text: 'כמה שאלות קצרות, והנחיה מה לעשות עד שמגיעים.' },
+  { title: 'אבחון במקום', text: 'איתור מקור התקלה עם ציוד מדידה, לא ניחוש.' },
+  { title: 'מחיר ואישור', text: 'אתם מחליטים לפני שמתחילים לעבוד.' },
+  { title: 'תיקון, בדיקה והסבר', text: `ועם ${site.warranty}.` },
+];
+---
+
+<BaseLayout
+  title={`חשמלאי מוסמך בגוש דן - ${site.ownerName}, זמין ${site.hours.emergencyShort}`}
+  description={`חשמלאי מוסמך ובודק חשמל ברמת גן, גבעתיים, בני ברק, תל אביב וקריית אונו. תקלות דחופות ${site.hours.emergencyShort}, לוחות חשמל, תאורה ועמדות טעינה. רישיון מס' ${site.license.number}.`}
+  schema={[faqSchema(homeFaqs)]}
+>
+  <!-- Hero -->
+  <section class="on-dark grid-bg relative overflow-hidden text-white">
+    <div aria-hidden="true" class="pointer-events-none absolute -top-40 start-1/2 size-[520px] rounded-full bg-volt/10 blur-3xl"></div>
+    <div class="container-site relative grid gap-12 py-12 md:py-20 lg:grid-cols-[1.15fr_1fr] lg:items-center">
+      <div>
+        <p class="circuit-label" data-code="L1">חשמלאי מוסמך ובודק חשמל · גוש דן</p>
+        <h1 class="mt-4 text-[2.5rem] leading-[1.08] sm:text-5xl lg:text-6xl">
+          תקלת חשמל עכשיו?
+          <span class="block text-volt">חשמלאי מוסמך בדרך.</span>
+        </h1>
+        <p class="mt-6 max-w-xl text-lg text-white/80 md:text-xl">
+          {site.ownerName}, {site.license.grade} עם {yearsOfExperience()} שנות ניסיון. תקלות דחופות מסביב לשעון, ועבודות מתוכננות: לוחות חשמל, תאורה ועמדות טעינה לרכב חשמלי.
+        </p>
+        <ContactButtons class="mt-8" whatsappText="שלום אסף, יש לי תקלת חשמל ואשמח לעזרה" />
+        <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/80">
+          <li class="flex items-center gap-2"><Icon name="badge-check" size={18} class="text-volt" />רישיון מס' <span class="ltr font-bold text-white">{site.license.number}</span></li>
+          <li class="flex items-center gap-2"><Icon name="timer" size={18} class="text-volt" />הגעה לתקלה דחופה: {site.emergencyResponse}</li>
+          <li class="flex items-center gap-2"><Icon name="check" size={18} class="text-volt" />מחיר ידוע לפני העבודה</li>
+        </ul>
+      </div>
+
+      <div class="relative mx-auto w-full max-w-md lg:max-w-none">
+        <div class="overflow-hidden rounded-3xl border border-white/10 shadow-lift">
+          <Picture image="heroPanel" sizes="(min-width: 1024px) 520px, 90vw" priority class="aspect-[4/3] w-full object-cover" />
+        </div>
+        <LicenseCard class="relative -mt-24 ms-6 me-[-0.5rem] sm:ms-16 lg:-ms-10 lg:me-10" />
+      </div>
+    </div>
+    <div class="wire"></div>
+  </section>
+
+  <!-- Trust bar -->
+  <section aria-label="למה אפשר לסמוך" class="border-b border-line bg-surface">
+    <ul class="container-site grid grid-cols-2 gap-px py-2 lg:grid-cols-4">
+      {trust.map((t) => (
+        <li class="flex items-start gap-3 p-4">
+          <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-volt-soft text-night"><Icon name={t.icon} size={22} /></span>
+          <span>
+            <span class="block font-extrabold leading-tight">{t.title}</span>
+            <span class="mt-0.5 block text-sm text-ink-soft">{t.text}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- Emergency box -->
+  <section class="container-site pt-12 md:pt-16">
+    <div class="reveal grid gap-6 rounded-3xl border-2 border-danger/25 bg-danger-soft p-6 md:grid-cols-[auto_1fr_auto] md:items-center md:p-8">
+      <span class="grid size-14 place-items-center rounded-2xl bg-danger text-white"><Icon name="triangle-alert" size={28} /></span>
+      <div>
+        <h2 class="text-2xl text-danger-dark">ריח שרוף, עשן או ניצוצות?</h2>
+        <p class="mt-2 text-ink">
+          <strong>קודם כל: הורידו את המפסק הראשי בלוח החשמל</strong> ואל תיגעו במקור התקלה. אם יש אש, התקשרו לכבאות ב-102. אחר כך התקשרו אלינו.
+        </p>
+      </div>
+      <a href="/emergency" class="btn btn-danger">
+        כל הצעדים בחירום
+        <Icon name="arrow-left" size={18} />
+      </a>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section">
+    <div class="container-site">
+      <div class="max-w-2xl">
+        <p class="circuit-label" data-code="L2">השירותים</p>
+        <h2 class="mt-3 text-3xl md:text-4xl">מהתקלה הקטנה ועד לוח חשמל חדש</h2>
+        <p class="mt-4 text-lg text-ink-soft">כל העבודות בבית, בדירה ובמשרד הקטן, עד חיבור של 3X80 אמפר.</p>
+      </div>
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((s, i) => <ServiceCard service={s} index={i} />)}
+        <div class="reveal flex flex-col justify-between rounded-[18px] bg-night p-6 text-white">
+          <div>
+            <p class="text-xl font-extrabold">לא בטוחים מה צריך?</p>
+            <p class="mt-2 text-white/75">תתארו בוואטסאפ מה קורה, ואפשר גם לצרף תמונה של הלוח. תקבלו תשובה מה כדאי לעשות.</p>
+          </div>
+          <a href="/contact" class="btn btn-call mt-6">דברו עם אסף</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Asaf -->
+  <section class="section bg-surface">
+    <div class="container-site grid gap-12 lg:grid-cols-2 lg:items-center">
+      <div class="relative">
+        <Picture image="socketInstall" sizes="(min-width: 1024px) 560px, 100vw" class="aspect-[4/3] w-full rounded-3xl object-cover shadow-lift" />
+        <div class="absolute -bottom-6 end-4 rounded-2xl bg-volt px-5 py-4 text-night shadow-lift">
+          <p class="text-3xl font-black leading-none">{yearsOfExperience()}</p>
+          <p class="text-sm font-bold">שנות ניסיון</p>
+        </div>
+      </div>
+      <div>
+        <p class="circuit-label" data-code="L3">למה אסף</p>
+        <h2 class="mt-3 text-3xl md:text-4xl">חשמלאי שאפשר לבדוק, לא רק לסמוך עליו</h2>
+        <ul class="mt-8 grid gap-6 sm:grid-cols-2">
+          {why.map((w) => (
+            <li class="reveal">
+              <p class="flex items-center gap-2 text-lg font-extrabold"><Icon name="check" size={20} class="text-success" />{w.title}</p>
+              <p class="mt-1.5 text-ink-soft">{w.text}</p>
+            </li>
+          ))}
+        </ul>
+        <a href="/about" class="mt-8 inline-flex items-center gap-1 font-bold">עוד על אסף<Icon name="arrow-left" size={18} /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section">
+    <div class="container-site">
+      <p class="circuit-label" data-code="L4">איך זה עובד</p>
+      <h2 class="mt-3 text-3xl md:text-4xl">ארבעה צעדים, בלי הפתעות</h2>
+      <ol class="mt-10 grid gap-5 md:grid-cols-4">
+        {steps.map((s, i) => (
+          <li class="card reveal relative p-6">
+            <span class="grid size-10 place-items-center rounded-full bg-night font-mono font-bold text-volt">{i + 1}</span>
+            <p class="mt-4 text-lg font-extrabold">{s.title}</p>
+            <p class="mt-1.5 text-ink-soft">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Gallery teaser -->
+  <section class="section bg-surface">
+    <div class="container-site">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p class="circuit-label" data-code="L5">עבודות</p>
+          <h2 class="mt-3 text-3xl md:text-4xl">לוחות, תאורה ועמדות טעינה</h2>
+        </div>
+        <a href="/gallery" class="inline-flex items-center gap-1 font-bold">לכל העבודות <Icon name="arrow-left" size={18} /></a>
+      </div>
+      <div class="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {gallery.slice(0, 4).map((g, i) => (
+          <figure class:list={['reveal overflow-hidden rounded-2xl bg-night', i === 0 && 'lg:row-span-2']}>
+            <Picture image={g.image} sizes="(min-width: 1024px) 300px, 50vw" class:list={['w-full object-cover', i === 0 ? 'aspect-[4/3] lg:aspect-auto lg:h-full' : 'aspect-[4/3]']} />
+            <figcaption class="sr-only">{g.title}</figcaption>
+          </figure>
+        ))}
+      </div>
+      {site.demo && <p class="mt-4 text-sm text-ink-soft">התמונות להמחשה בלבד ואינן עבודות של העסק.</p>}
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section">
+    <div class="container-site">
+      <p class="circuit-label" data-code="L6">המלצות</p>
+      <h2 class="mt-3 text-3xl md:text-4xl">מה אומרים לקוחות</h2>
+      <div class="mt-10 grid gap-6 md:grid-cols-3">
+        {testimonials.slice(0, 3).map((t) => <TestimonialCard item={t} />)}
+      </div>
+      <a href="/reviews" class="mt-8 inline-flex items-center gap-1 font-bold">לכל ההמלצות <Icon name="arrow-left" size={18} /></a>
+    </div>
+  </section>
+
+  <!-- Areas -->
+  <section class="section bg-surface">
+    <div class="container-site grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+      <div>
+        <p class="circuit-label" data-code="L7">אזורי שירות</p>
+        <h2 class="mt-3 text-3xl md:text-4xl">יוצאים מ{site.baseCity}, מגיעים לכל גוש דן</h2>
+        <p class="mt-4 text-lg text-ink-soft">קרוב זה מהר. זמן הגעה משוער לתקלה דחופה באזורים האלה: {site.emergencyResponse}.</p>
+      </div>
+      <ul class="grid gap-3 sm:grid-cols-2">
+        {areas.map((a) => (
+          <li>
+            <a href={`/areas/${a.slug}`} class="group card flex items-center justify-between gap-3 p-4 text-ink no-underline hover:border-blue">
+              <span class="flex items-center gap-3">
+                <Icon name="map-pin" size={20} class="text-blue" />
+                <span>
+                  <span class="block font-extrabold">חשמלאי {a.inCity}</span>
+                  <span class="block text-sm text-ink-soft">{a.summary}</span>
+                </span>
+              </span>
+              <Icon name="arrow-left" size={18} class="shrink-0 text-ink-soft transition-transform group-hover:-translate-x-1" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="container-site grid gap-10 lg:grid-cols-[1fr_1.6fr]">
+      <div>
+        <p class="circuit-label" data-code="L8">שאלות נפוצות</p>
+        <h2 class="mt-3 text-3xl md:text-4xl">לפני שמתקשרים</h2>
+        <a href="/faq" class="mt-6 inline-flex items-center gap-1 font-bold">לכל השאלות <Icon name="arrow-left" size={18} /></a>
+      </div>
+      <Faq items={homeFaqs} />
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

@@ -1,0 +1,21 @@
+---
+import type { Testimonial } from '../data/content';
+import Icon from './Icon.astro';
+
+interface Props {
+  item: Testimonial;
+}
+const { item } = Astro.props;
+---
+
+<figure class="card reveal flex h-full flex-col p-6">
+  <div class="flex items-center justify-between gap-3">
+    <Icon name="quote" size={28} class="text-volt-dark" />
+    {item.sample && <span class="demo-tag">המלצה לדוגמה</span>}
+  </div>
+  <blockquote class="mt-3 flex-1 text-ink">{item.text}</blockquote>
+  <figcaption class="mt-5 border-t border-line pt-4 text-sm">
+    <span class="font-bold">{item.name}</span>
+    <span class="text-ink-soft"> · {item.city} · {item.service}</span>
+  </figcaption>
+</figure>
